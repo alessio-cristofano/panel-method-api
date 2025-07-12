@@ -1,5 +1,9 @@
 #pylint:disable=C0114,C0103
 import subprocess
+import numpy as np
+import pandas as pd
+import json 
+
 
 program_type = "hp_3d"
 file_name = "/".join(["./fortran",program_type,"input.dat"])
@@ -33,6 +37,34 @@ with open(file_name,"w") as input_file:
     input_file.write(str(fase) + "\n")
     input_file.write(str(thic) + "\n")
 
-result = subprocess.run(["./p17"],cwd="./fortran/hp_3d",capture_output=True, text=True)
+subprocess.run(["./p17"],cwd="./fortran/hp_3d",capture_output=True, text=True)
 
-print(result)
+with open("./fortran/hp_3d/out/output.csv","r") as output_file:
+    results = pd.read_csv(output_file,dtype=np.float64)
+
+parameters = {}
+parameters["chordwise_panels"] = ib
+parameters["spanwise_panels"] = jb
+parameters["total_steps"] = nst
+parameters["speed"] = vt
+parameters["wing_span"] = b
+parameters["mean_alpha0"] = amed
+parameters["temp_division"] = temp
+parameters["pitch_amplitude"] = aa
+parameters["pitch_omega"] = oma
+parameters["heave_amplitude"] = sza
+parameters["heave_omega"] = omh
+parameters["heave_phase"] = fase
+parameters["naca_thickness"] = thic
+
+results_dict = {}
+results_dict["lift_coefficient"] = results["CL"].tolist()
+results_dict["drag_coefficient"] = results["CD"].tolist()
+results_dict["moment_coefficient"] = results["CM"].tolist()
+
+output_dict = {}
+output_dict["parameters"] = parameters
+output_dict["data"] = results_dict
+
+with open("./output.json","w") as json_file:
+    json.dump(output_dict,json_file)
