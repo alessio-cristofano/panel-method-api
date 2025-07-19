@@ -1,3 +1,6 @@
 .flaskenv
 venv/
 __pycache__/
+app/solver/hp_3d/input
+app/solver/hp_3d/out
+app/solver/hp_3d/autohp.sh

@@ -23,7 +23,7 @@ CHARACTER(LEN=3)::  STRIB,STRJB,STRA,STRB,STRV,STRKH
 !     LETTURA INPUT E ALLOCAZIONE
 ! ==================================================================================
 !
-open(1, file = 'input.dat')
+open(1, file = './input/input.dat')
     read(1,*)	IB
     read(1,*)	JB
     read(1,*)	NSTEPS
@@ -155,7 +155,7 @@ DO N = 1,NSTEPS
     END DO
 !                                                                      
 
-open(22,file= 'qf.txt')
+open(22,file= './out/qf.txt')
 	do i = 1,ib2
 	    write(22,*) qf(i,1,1),qf(i,1,2),qf(i,1,3)
 	end do
